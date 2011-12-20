@@ -1,19 +1,21 @@
+
 /**
- * TypeHinter. A singleton class/object that allows for argument enforcement
- *     (aka. type hinting).
+ * TypeHinter
+ * 
+ * A singleton class/object that allows for argument enforcement (aka. type
+ * hinting).
  * 
  * @author Oliver Nassar <onassar@gmail.com>
- * @version 1.0
- * @todo return boolean from `check` method incase `__strict` is set to `false`
- * @todo add ability to pass function to `check`, which gets run when an error
- *     occurs
- * @todo add ability to define json-object signatures (eg. {name: String})
- * @todo add `relax` property/setters
- * @todo add normalizer method?
- * @todo add method for passing in custom-class instance names for better error
- *     messages
  * @public
  * @var Object
+ * @todo   return boolean from <check> method incase <__strict> is set to <false>
+ * @todo   add ability to pass function to <check>, which gets run when an error
+ *         occurs
+ * @todo   add ability to define json-object signatures (eg. {name: String})
+ * @todo   add <relax> property/setters
+ * @todo   add normalizer method?
+ * @todo   add method for passing in custom-class instance names for better error
+ *         messages
  */
 var TypeHinter = (function() {
 
@@ -27,7 +29,7 @@ var TypeHinter = (function() {
     var __active = true;
 
     /**
-     * __callee. String referencing to the method that is having it's arguments
+     * __callee. String referencing the method that is having it's arguments
      *     checked/enforced.
      *
      * @private
@@ -47,7 +49,7 @@ var TypeHinter = (function() {
     /**
      * __natives. A hash used for mapping primitive/native data types.
      *
-     * @note null-case for `htmlImageElement` and `htmlOptionElement` objects
+     * @note null-case for <htmlImageElement> and <htmlOptionElement> objects
      *     provided to allow for server-side (nodejs) usage of class
      * @see http://www.learn-javascript-tutorial.com/QuickRecap.cfm
      * @see http://www.howtocreate.co.uk/tutorials/javascript/variables
@@ -92,7 +94,9 @@ var TypeHinter = (function() {
         if (__strict === true) {
             throw msg;
         } else {
-            console.log(msg);
+            console &&
+                console.log &&
+                console.log(msg);
         }
     }
 
@@ -172,7 +176,7 @@ var TypeHinter = (function() {
 
             /**
              * if object is null or undefined, store string values as cannot
-             *     create new object-instances for `__getType` method
+             *     create new object-instances for <__getType> method
              */
             if (obj === null) {
                 type = 'null';
@@ -196,7 +200,7 @@ var TypeHinter = (function() {
 
         /**
          * benchmark. Stores references to the filename and callee being
-         *     checked. Must be called before a call to `check`, otherwise
+         *     checked. Must be called before a call to <check>, otherwise
          *     an error will be thrown.
          * 
          * @public
@@ -342,4 +346,3 @@ var TypeHinter = (function() {
 if (typeof exports !== 'undefined') {
     exports.TypeHinter = TypeHinter;
 }
-
