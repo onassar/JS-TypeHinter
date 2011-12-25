@@ -17,6 +17,32 @@
  * @todo       add method for passing in custom-class instance names for better error
  *             messages
  * @example
+ * <code>
+ *     $('node').addEvent(function(event) {
+ *         TypeHinter.benchmark('prepare.js', 'events');
+ *         TypeHinter.check(
+ *             [event, Event]
+ *         );
+ *     });
+ * </code>
+ * @example
+ * <code>
+ *     function truncate(str, length) {
+ * 
+ *         // argument validation
+ *         TypeHinter.benchmark('string.js', 'truncate');
+ *         TypeHinter.check(
+ *             [str, String],
+ *             [length, Number]
+ *         );
+ * 
+ *         // logic
+ *         if (str.length > length) {
+ *             return str.slice(0, length - 3) + '...';
+ *         }
+ *         return this;
+ *     }
+ * </code>
  */
 var TypeHinter = (function() {
 
