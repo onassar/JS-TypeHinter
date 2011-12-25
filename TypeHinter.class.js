@@ -5,56 +5,65 @@
  * A singleton class/object that allows for argument enforcement (aka. type
  * hinting).
  * 
- * @author Oliver Nassar <onassar@gmail.com>
+ * @author     Oliver Nassar <onassar@gmail.com>
  * @public
  * @var Object
- * @todo   return boolean from <check> method incase <__strict> is set to <false>
- * @todo   add ability to pass function to <check>, which gets run when an error
- *         occurs
- * @todo   add ability to define json-object signatures (eg. {name: String})
- * @todo   add <relax> property/setters
- * @todo   add normalizer method?
- * @todo   add method for passing in custom-class instance names for better error
- *         messages
+ * @todo       return boolean from <check> method incase <__strict> is set to <false>
+ * @todo       add ability to pass function to <check>, which gets run when an error
+ *             occurs
+ * @todo       add ability to define json-object signatures (eg. {name: String})
+ * @todo       add <relax> property/setters
+ * @todo       add normalizer method?
+ * @todo       add method for passing in custom-class instance names for better error
+ *             messages
+ * @example
  */
 var TypeHinter = (function() {
 
     /**
-     * __active. Whether or not enforcement is active; useful for disabling
-     *     in production-environments.
+     * __active
+     * 
+     * Whether or not enforcement is active; useful for disabling in
+     * production-environments.
      *
      * @private
-     * @var Boolean
+     * @var     Boolean
      */
     var __active = true;
 
     /**
-     * __callee. String referencing the method that is having it's arguments
-     *     checked/enforced.
+     * __callee
+     * 
+     * String referencing the method that is having it's arguments
+     * checked/enforced.
      *
      * @private
-     * @var String
+     * @var     String
      */
     var __callee;
 
     /**
-     * __filename. String referencing the filename/path whose function/method is
-     *     having it's arguments checked/enforced.
+     * __filename
+     * 
+     * String referencing the filename/path whose function/method is having it's
+     * arguments checked/enforced.
      *
      * @private
-     * @var String
+     * @var     String
      */
     var __filename;
 
     /**
-     * __natives. A hash used for mapping primitive/native data types.
+     * __natives
+     * 
+     * A hash used for mapping primitive/native data types.
      *
-     * @note null-case for <htmlImageElement> and <htmlOptionElement> objects
-     *     provided to allow for server-side (nodejs) usage of class
-     * @see http://www.learn-javascript-tutorial.com/QuickRecap.cfm
-     * @see http://www.howtocreate.co.uk/tutorials/javascript/variables
+     * @notes   null-case for <htmlImageElement> and <htmlOptionElement> objects
+     *          provided to allow for server-side (nodejs) usage of class
+     * @see     http://www.learn-javascript-tutorial.com/QuickRecap.cfm
+     * @see     http://www.howtocreate.co.uk/tutorials/javascript/variables
      * @private
-     * @var Object
+     * @var     Object
      */
     var __natives = {
         'object': Object,
@@ -74,45 +83,51 @@ var TypeHinter = (function() {
     };
 
     /**
-     * __strict. Boolean keeping track of whether-or-not to error-out upon an
-     *     argument-type-violation.
+     * __strict
+     * 
+     * Boolean keeping track of whether-or-not to error-out upon an
+     * argument-type-violation.
      *
      * @private
-     * @var Boolean
+     * @var     Boolean
      */
     var __strict = true;
 
     /**
-     * __error. Outputs or throws an error.
+     * __error
+     * 
+     * Outputs or throws an error.
      * 
      * @private
-     * @param String msg message to either throw or output to the console
-     * @return void
+     * @param   String msg message to either throw or output to the console
+     * @return  void
      */
     function __error(msg) {
         msg = '[' + __filename + '::' + __callee + ']\n' + msg + '\n';
         if (__strict === true) {
             throw msg;
         } else {
-            console &&
-                console.log &&
-                console.log(msg);
+            console
+            && console.log
+            && console.log(msg);
         }
     }
 
     /**
-     * __getType. Returns a string representing the passed in argument's type.
-     *     If argument is an instance of custom-class, object will *not* be
-     *     returned; rather the string '(custom-class instance)'.
+     * __getType
      * 
-     * @note helper for error-message-handling
+     * Returns a string representing the passed in argument's type. If argument
+     * is an instance of custom-class, object will *not* be returned; rather the
+     * string '(custom-class instance)'.
+     * 
+     * @note    helper for error-message-handling
      * @private
-     * @param mixed arg 'object' whose type should be determined
-     * @return String passed in objects type-string
+     * @param   mixed arg 'object' whose type should be determined
+     * @return  String passed in objects type-string
      */
     function __getType(arg) {
 
-        // if undefined of null (can't perform constructor checks ont hem)
+        // if undefined of null (can't perform constructor checks on them)
         if (arg === null) {
             return 'null';
         } else if (arg === undefined) {
@@ -126,7 +141,7 @@ var TypeHinter = (function() {
 
             /**
              * if the type being checked against is null or undefined, continue
-             *     with the loop, as their constructors can't be checked.
+             * with the loop, as their constructors can't be checked.
              */
             if (
                 type === null
@@ -143,40 +158,42 @@ var TypeHinter = (function() {
 
         /**
          * assume custom class (since checked against all [?] possible object
-         *     types)
+         * types)
          */
         return '(custom-class instance)';
     }
 
     /**
-     * __getTypes. Returns an array of types for a passed in array of objects.
+     * __getTypes
      * 
-     * @note helper for error-message-handling
+     * Returns an array of types for a passed in array of objects.
+     * 
+     * @notes   helper for error-message-handling
      * @private
-     * @param Array arg array of objects who's types should be returned in the
-     *     same order
-     * @return Array array of strings, representing the passed in arguments
-     *     object-types
+     * @param   Array arg array of objects who's types should be returned in the
+     *          same order
+     * @return  Array array of strings, representing the passed in arguments
+     *          object-types
      */
     function __getTypes(args) {
 
         /**
          * set reference for array argument, object type and response-array;
-         *     iterator presets
+         * iterator presets
          */
         var obj, type, types = [], x = 0, l = args.length;
 
         /**
          * note that an iterative loop must be used here, rather than a for/var
-         *     loop, since unlike in nodejs, the array's method are iterated
-         *     over with the for/var variety
+         * loop, since unlike in nodejs, the array's method are iterated over
+         * with the for/var variety
          */
         for (x; x < l; ++x) {
             obj = args[x];
 
             /**
              * if object is null or undefined, store string values as cannot
-             *     create new object-instances for <__getType> method
+             * create new object-instances for <__getType> method
              */
             if (obj === null) {
                 type = 'null';
@@ -185,7 +202,7 @@ var TypeHinter = (function() {
             }
             /**
              * object isn't null or undefined; get type by creating a new
-             *     instance of it; grab type
+             * instance of it; grab type
              */
             else {
                 type = __getType(new obj);
@@ -199,14 +216,16 @@ var TypeHinter = (function() {
     return {
 
         /**
-         * benchmark. Stores references to the filename and callee being
-         *     checked. Must be called before a call to <check>, otherwise
-         *     an error will be thrown.
+         * benchmark
+         * 
+         * Stores references to the filename and callee being checked. Must be
+         * called before a call to <check>, otherwise an error will be thrown.
          * 
          * @public
-         * @param String filename name of the file currently performing the check
-         * @param String callee name of the method (or some other identifier)
-         *     performing the check; used for error logging
+         * @param  String filename name of the file currently performing the
+         *         check
+         * @param  String callee name of the method (or some other identifier)
+         *         performing the check; used for error logging
          * @return void
          */
         benchmark: function(filename, callee) {
@@ -215,7 +234,9 @@ var TypeHinter = (function() {
         },
 
         /**
-         * check. Performs the check on an array of arguments passed in.
+         * check
+         * 
+         * Performs the check on an array of arguments passed in.
          * 
          * @public
          * @return void
@@ -249,7 +270,7 @@ var TypeHinter = (function() {
 
                         /**
                          * if no types supplied (eg. must be defined, but not
-                         *     restricted to object-type)
+                         * restricted to object-type)
                          */
                         if (types.length === 0) {
                             if (param === undefined) {
@@ -264,18 +285,18 @@ var TypeHinter = (function() {
 
                         /**
                          * loop through the possible acceptable types for the
-                         *     argument; iterative loop must be used here,
-                         *     rather than a for/var loop, since unlike in
-                         *     nodejs, the array's method are iterated over with
-                         *     the for/var variety
+                         * argument; iterative loop must be used here, rather
+                         * than a for/var loop, since unlike in nodejs, the
+                         * array's method are iterated over with the for/var
+                         * variety
                          */
                         for (y; y < types.length; ++y) {
 
                             /**
                              * the parameter being checked is undefined or null,
-                             *     check against the acceptable types manually
-                             *     since the constructor for the parameter
-                             *     wouldn't be accessible
+                             * check against the acceptable types manually since
+                             * the constructor for the parameter wouldn't be
+                             * accessible
                              */
                             if (
                                 param === undefined
@@ -307,7 +328,9 @@ var TypeHinter = (function() {
         },
 
         /**
-         * off. Switch the checking off (useful for production environments)
+         * off
+         * 
+         * Switch the checking off (useful for production environments)
          * 
          * @public
          * @return void
@@ -317,7 +340,9 @@ var TypeHinter = (function() {
         },
 
         /**
-         * on. Switch the checking on (useful for development environments)
+         * on
+         * 
+         * Switch the checking on (useful for development environments)
          * 
          * @public
          * @return void
@@ -327,13 +352,15 @@ var TypeHinter = (function() {
         },
 
         /**
-         * strict. Switches the strict flag either on or off, which controls
-         *     whether or not an error is throw versus logged. Useful for
-         *     production versus development environments.
+         * strict
+         * 
+         * Switches the strict flag either on or off, which controls whether or
+         * not an error is throw versus logged. Useful for production versus
+         * development environments.
          * 
          * @public
-         * @param Booean on whether or not strict enforcement should should be
-         *     applied
+         * @param  Boolean on whether or not strict enforcement should should be
+         *         applied
          * @return void
          */
         strict: function(on) {
