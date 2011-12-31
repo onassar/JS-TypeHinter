@@ -18,7 +18,7 @@
  *             messages
  * @example
  * <code>
- *     $('node').addEvent(function(event) {
+ *     $('node').addEvent('click', function(event) {
  *         TypeHinter.benchmark('prepare.js', 'events');
  *         TypeHinter.check(
  *             [event, Event]
