@@ -40,6 +40,6 @@ the script is already included in the class definition (look at the end of the
 file).
 
 In the example above, if the argument passed in was a different type, or not
-passed at all (eg. another method runs $('node').fireEvent('click')), the
-TypeHinter would throw an error, with details on which file/method is at the
-cause of it.
+passed at all (eg. another method runs
+$(&#039;node&#039;).fireEvent(&#039;click&#039;)), the TypeHinter would throw an
+error, with details on which file/method is at the cause of it.
