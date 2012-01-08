@@ -17,22 +17,22 @@ In this call, you pass along your arguments, and what type of objects they can b
 ``` javascript
 
 
-    // some node
-    $('node').addEvent('click', function(event) {
+// some node
+$('node').addEvent('click', function(event) {
 
-        // benchmark what file/method is performing the check
-        TypeHinter.benchmark('prepare.js', '(anonymous-1)');
+    // benchmark what file/method is performing the check
+    TypeHinter.benchmark('prepare.js', '(anonymous-1)');
 
-        /**
-         * Ensure that the <event> object passed is an instance of the
-         * <Event> class
-         */
-        TypeHinter.check(
-            [event, Event]
-        );
-        
-        // further logic, assuming successful TypeHinter checks
-    });
+    /**
+     * Ensure that the <event> object passed is an instance of the
+     * <Event> class
+     */
+    TypeHinter.check(
+        [event, Event]
+    );
+    
+    // further logic, assuming successful TypeHinter checks
+});
 
 ```
 
