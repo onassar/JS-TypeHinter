@@ -16,7 +16,6 @@ In this call, you pass along your arguments, and what type of objects they can b
 
 ``` javascript
 
-
 // some node
 $('node').addEvent('click', function(event) {
 
@@ -33,7 +32,6 @@ $('node').addEvent('click', function(event) {
     
     // further logic, assuming successful TypeHinter checks
 });
-
 ```
 
 The above example showcases a typical example, and while being done on the
