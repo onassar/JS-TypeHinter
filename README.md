@@ -14,6 +14,9 @@ In this call, you pass along your arguments, and what type of objects they can b
 
 ### MooTools Example
 
+``` javascript
+
+
     // some node
     $('node').addEvent('click', function(event) {
 
@@ -30,6 +33,8 @@ In this call, you pass along your arguments, and what type of objects they can b
         
         // further logic, assuming successful TypeHinter checks
     });
+
+```
 
 The above example showcases a typical example, and while being done on the
 client side, it just as easily ports over to Node as well. The hook to export
