@@ -5,17 +5,16 @@
  * A singleton class/object that allows for argument enforcement (aka. type
  * hinting).
  * 
- * @author     Oliver Nassar <onassar@gmail.com>
- * @public
- * @var Object
- * @todo       return boolean from <check> method incase <__strict> is set to <false>
- * @todo       add ability to pass function to <check>, which gets run when an error
- *             occurs
- * @todo       add ability to define json-object signatures (eg. {name: String})
- * @todo       add <relax> property/setters
- * @todo       add normalizer method?
- * @todo       add method for passing in custom-class instance names for better error
- *             messages
+ * @author  Oliver Nassar <onassar@gmail.com>
+ * @todo    return boolean from <check> method incase <__strict> is set to
+ *          <false>
+ * @todo    add ability to pass function to <check>, which gets run when an
+ *          error occurs
+ * @todo    add ability to define json-object signatures (eg. {name: String})
+ * @todo    add <relax> property/setters
+ * @todo    add normalizer method?
+ * @todo    add method for passing in custom-class instance names for better
+ *          error messages
  * @example
  * <code>
  *     $('node').addEvent('click', function(event) {
